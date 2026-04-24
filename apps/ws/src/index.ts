@@ -1,6 +1,8 @@
 import { WebSocketServer, WebSocket } from "ws";
 
-const wss = new WebSocketServer({ port: 3002 });
+const PORT = Number(process.env.PORT) || 3002;
+
+const wss = new WebSocketServer({ port: PORT });
 
 // Map: client → workerId they are subscribed to
 const clients = new Map<WebSocket, number>();
