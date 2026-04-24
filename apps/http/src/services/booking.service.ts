@@ -2,9 +2,10 @@ import { prisma } from "@repo/db";
 import { AppError } from "../utils/AppError.js";
 import { sendWSMessage } from "../lib/wsClient.js";
 
+
 export const bookSlot = async (userId: number, slotId: number) => {
   try {
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       const slot = await tx.slot.findUnique({
         where: { id: slotId },
       });

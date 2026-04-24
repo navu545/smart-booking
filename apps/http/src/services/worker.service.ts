@@ -13,8 +13,8 @@ export const getWorkers = async () => {
   const userLat = 30.7333;
   const userLng = 76.7794;
 
-  const enriched = workers.map((w) => {
-    const availableSlots = w.slots.filter((s) => !s.isBooked).length;
+  const enriched = workers.map((w: any) => {
+    const availableSlots = w.slots.filter((s: any) => !s.isBooked).length;
 
     const distance = getDistance(userLat, userLng, w.lat, w.lng);
 
