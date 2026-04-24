@@ -13,5 +13,5 @@
 
     "types": ["node"]
   },
-  "include": ["index.ts", "seed.ts"]
+  "include": ["index.ts", "seed.ts", "seedData.ts"]
 }
