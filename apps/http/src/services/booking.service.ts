@@ -1,6 +1,7 @@
 import { prisma } from "@repo/db";
 import { AppError } from "../utils/AppError.js";
 import { sendWSMessage } from "../lib/wsClient.js";
+import { invalidateWorkerCache } from "./worker.service.js";
 
 
 export const bookSlot = async (userId: number, slotId: number) => {
@@ -49,6 +50,9 @@ export const bookSlot = async (userId: number, slotId: number) => {
         workerId: slot.workerId,
       };
     });
+
+    // ✅ Invalidate cache after booking
+    invalidateWorkerCache();
 
     // ✅ AFTER transaction succeeds
     sendWSMessage({

@@ -1,7 +1,19 @@
 import { prisma } from "@repo/db";
 import { getDistance } from "../utils/distance.js";
 
+// 🧠 CACHE
+let cachedWorkers: any = null;
+let lastFetchTime = 0;
+const CACHE_TTL = 30 * 1000; // 30 seconds (safe for real-time system)
+
 export const getWorkers = async () => {
+  const now = Date.now();
+
+  //  Return cache if fresh
+  if (cachedWorkers && now - lastFetchTime < CACHE_TTL) {
+    return cachedWorkers;
+  }
+
   const workers = await prisma.worker.findMany({
     include: {
       user: true,
@@ -9,7 +21,7 @@ export const getWorkers = async () => {
     },
   });
 
-  // 🔥 TEMP: hardcoded user location
+  //  TEMP: hardcoded user location
   const userLat = 30.7333;
   const userLng = 76.7794;
 
@@ -24,9 +36,13 @@ export const getWorkers = async () => {
       rating: w.rating,
       user: w.user,
       availableSlots,
-      distance, 
+      distance,
     };
   });
+
+  //  Save to cache
+  cachedWorkers = enriched;
+  lastFetchTime = now;
 
   return enriched;
 };
@@ -37,10 +53,15 @@ export const getSlots = async (workerId: number) => {
       workerId,
     },
     include: {
-      booking: true, 
+      booking: true,
     },
     orderBy: {
       date: "asc",
     },
   });
+};
+
+//  EXPOSE INVALIDATION FUNCTION
+export const invalidateWorkerCache = () => {
+  cachedWorkers = null;
 };

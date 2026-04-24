@@ -39,6 +39,8 @@ model Slot {
   isBooked  Boolean  @default(false)
 
   booking   Booking?
+
+  @@index([workerId])
 }
 
 model Booking {
