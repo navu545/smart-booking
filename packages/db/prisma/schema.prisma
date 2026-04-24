@@ -1,0 +1,60 @@
+// packages/db/prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  role     Role
+  worker   Worker?
+  bookings Booking[] @relation("UserBookings")
+}
+
+model Worker {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Float    @default(0)
+
+  lat       Float    @default(0)
+  lng       Float    @default(0)
+
+  slots     Slot[]
+  bookings  Booking[]
+}
+
+model Slot {
+  id        Int      @id @default(autoincrement())
+  workerId  Int
+  worker    Worker   @relation(fields: [workerId], references: [id])
+  date      DateTime
+  isBooked  Boolean  @default(false)
+
+  booking   Booking?
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  workerId  Int
+  slotId    Int      @unique
+
+  user      User     @relation("UserBookings", fields: [userId], references: [id])
+  worker    Worker   @relation(fields: [workerId], references: [id])
+  slot      Slot     @relation(fields: [slotId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  CUSTOMER
+  WORKER
+}
