@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Slot } from "../types";
+import { API_BASE } from "../api/client";
 
 export const useSlots = (workerId: number) => {
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -13,7 +14,7 @@ export const useSlots = (workerId: number) => {
         setLoading(true);
 
         const res = await fetch(
-          `http://localhost:3001/workers/slots?workerId=${workerId}`,
+          `${API_BASE}/workers/slots?workerId=${workerId}`,
         );
 
         const data = await res.json();

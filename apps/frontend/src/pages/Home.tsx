@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import WorkerList from "../components/WorkerList";
 import SlotGrid from "../components/SlotGrid";
 import toast from "react-hot-toast";
+import { API_BASE } from "../api/client";
 
 type User = {
   id: number;
@@ -19,7 +20,7 @@ const Home = () => {
 
     const fetchUsers = async () => {
       try {
-        const res = await fetch("http://localhost:3001/users");
+        const res = await fetch(`${API_BASE}/users`);
         const data = await res.json();
 
         if (!cancelled && data?.data?.length > 0) {
@@ -46,7 +47,7 @@ const Home = () => {
     try {
       setResetting(true);
 
-      const res = await fetch("http://localhost:3001/admin/reset", {
+      const res = await fetch(`${API_BASE}/admin/reset`, {
         method: "POST",
       });
 
@@ -58,7 +59,7 @@ const Home = () => {
       setSelectedWorkerId(null);
 
       // Re-fetch users after reseed
-      const userRes = await fetch("http://localhost:3001/users");
+      const userRes = await fetch(`${API_BASE}/users`);
       const userData = await userRes.json();
 
       if (userData?.data?.length > 0) {

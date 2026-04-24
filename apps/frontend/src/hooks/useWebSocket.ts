@@ -4,7 +4,9 @@ export const useWebSocket = (workerId: number) => {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3002");
+    const WS_URL = import.meta.env.VITE_WS_URL || "ws://localhost:3002";
+
+    const socket = new WebSocket(WS_URL);
     wsRef.current = socket;
 
     socket.onopen = () => {
