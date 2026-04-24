@@ -1,5 +1,5 @@
 import { prisma } from "@repo/db";
-import { seedDatabase } from "@repo/db/seedData.js";
+import { seedDatabase } from "@repo/db/seedData";
 import { sendWSMessage } from "../lib/wsClient.js";
 
 export const resetDatabase = async () => {
